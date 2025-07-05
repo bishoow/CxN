@@ -63,6 +63,19 @@ const ProductDetail = () => {
     return colorMap[color] || color.toLowerCase();
   };
 
+  const getColorDescription = (color: string) => {
+    const descriptions: { [key: string]: string } = {
+      'Black': 'Classic black - versatile and timeless',
+      'White': 'Pure white - clean and fresh look',
+      'Gray': 'Heather gray - modern and neutral',
+      'Navy': 'Deep navy - sophisticated and bold',
+      'Red': 'Vibrant red - eye-catching and energetic',
+      'Blue': 'Royal blue - confident and stylish',
+      'Green': 'Forest green - natural and calming'
+    };
+    return descriptions[color] || `Beautiful ${color.toLowerCase()} shade`;
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <Navbar />
@@ -105,6 +118,11 @@ const ProductDetail = () => {
                   Sale
                 </div>
               )}
+
+              {/* Brand Badge */}
+              <div className="absolute bottom-6 left-6 bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-full text-lg font-bold">
+                CXN
+              </div>
             </div>
 
             {/* Image Thumbnails */}
@@ -134,7 +152,12 @@ const ProductDetail = () => {
           {/* Product Info */}
           <div className="space-y-6">
             <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+              <div className="flex items-center justify-between mb-2">
+                <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+                <div className="text-sm font-semibold text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
+                  CXN Collection
+                </div>
+              </div>
               <div className="flex items-center space-x-3">
                 <span className="text-3xl font-bold text-gray-900">${product.price}</span>
                 {product.originalPrice && (
@@ -148,26 +171,37 @@ const ProductDetail = () => {
               </div>
             </div>
 
-            <p className="text-lg text-gray-600">{product.description}</p>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-lg text-gray-700 leading-relaxed">{product.description}</p>
+            </div>
 
-            {/* Color Selection */}
+            {/* Color Selection with Preview */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Color: {selectedColor && <span className="font-normal text-gray-600">{selectedColor}</span>}
+                Choose Color: {selectedColor && <span className="font-normal text-gray-600">{selectedColor}</span>}
               </h3>
-              <div className="flex space-x-3">
+              {selectedColor && (
+                <p className="text-sm text-gray-600 mb-4 italic">
+                  {getColorDescription(selectedColor)}
+                </p>
+              )}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {product.colors.map(color => (
                   <button
                     key={color}
                     onClick={() => setSelectedColor(color)}
-                    className={`w-12 h-12 rounded-full border-4 transition-all hover:scale-110 ${
+                    className={`flex items-center space-x-3 p-3 border-2 rounded-lg transition-all hover:scale-105 ${
                       selectedColor === color
-                        ? 'border-gray-900 scale-110'
+                        ? 'border-gray-900 bg-gray-50'
                         : 'border-gray-200 hover:border-gray-300'
                     }`}
-                    style={{ backgroundColor: getColorValue(color) }}
-                    title={color}
-                  />
+                  >
+                    <div
+                      className="w-8 h-8 rounded-full border-2 border-white shadow-md"
+                      style={{ backgroundColor: getColorValue(color) }}
+                    />
+                    <span className="font-medium text-gray-900">{color}</span>
+                  </button>
                 ))}
               </div>
             </div>
@@ -175,7 +209,7 @@ const ProductDetail = () => {
             {/* Size Selection */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Size: {selectedSize && <span className="font-normal text-gray-600">{selectedSize}</span>}
+                Select Size: {selectedSize && <span className="font-normal text-gray-600">{selectedSize}</span>}
               </h3>
               <div className="flex flex-wrap gap-3">
                 {product.sizes.map(size => (
@@ -221,7 +255,7 @@ const ProductDetail = () => {
 
             {/* Product Features */}
             <div className="border-t border-gray-200 pt-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">Features</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Product Features</h3>
               <ul className="space-y-2">
                 {product.features.map((feature, index) => (
                   <li key={index} className="flex items-center space-x-3">
@@ -247,7 +281,7 @@ const ProductDetail = () => {
 
         {/* Related Products */}
         <div className="mt-20">
-          <h2 className="text-2xl font-bold text-gray-900 mb-8">You might also like</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-8">More from CXN Collection</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {mockProducts
               .filter(p => p.id !== product.id && p.category === product.category)
@@ -258,13 +292,16 @@ const ProductDetail = () => {
                   to={`/product/${relatedProduct.id}`}
                   className="group"
                 >
-                  <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover-scale">
-                    <div className="aspect-square overflow-hidden">
+                  <div className="bg-white rounded-xl shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden hover:scale-105">
+                    <div className="aspect-square overflow-hidden relative">
                       <img
                         src={relatedProduct.image}
                         alt={relatedProduct.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
+                      <div className="absolute bottom-2 right-2 bg-black/80 text-white px-2 py-1 rounded text-xs font-bold">
+                        CXN
+                      </div>
                     </div>
                     <div className="p-4">
                       <h3 className="font-semibold text-gray-900 mb-2">{relatedProduct.name}</h3>

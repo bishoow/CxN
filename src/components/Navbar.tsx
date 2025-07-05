@@ -18,7 +18,7 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-16">
             {/* Logo */}
             <Link to="/" className="text-2xl font-bold text-gray-900 hover:text-gray-700 transition-colors">
-              THREADS
+              CXN
             </Link>
 
             {/* Desktop Navigation */}
