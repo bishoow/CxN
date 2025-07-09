@@ -13,8 +13,6 @@ const ProductDetail = () => {
   const { addToCart } = useCart();
   
   const [selectedSize, setSelectedSize] = useState('');
-  const [selectedColor, setSelectedColor] = useState('');
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isLiked, setIsLiked] = useState(false);
   const [isAdded, setIsAdded] = useState(false);
 
@@ -32,8 +30,8 @@ const ProductDetail = () => {
   }
 
   const handleAddToCart = () => {
-    if (!selectedSize || !selectedColor) {
-      alert('Please select size and color');
+    if (!selectedSize) {
+      alert('Please select size');
       return;
     }
 
@@ -42,38 +40,12 @@ const ProductDetail = () => {
       name: product.name,
       price: product.price,
       size: selectedSize,
-      color: selectedColor,
+      color: product.colors[0], // Default to first color
       image: product.image
     });
 
     setIsAdded(true);
     setTimeout(() => setIsAdded(false), 2000);
-  };
-
-  const getColorValue = (color: string) => {
-    const colorMap: { [key: string]: string } = {
-      'Black': '#000000',
-      'White': '#FFFFFF',
-      'Gray': '#6B7280',
-      'Navy': '#1E3A8A',
-      'Red': '#DC2626',
-      'Blue': '#2563EB',
-      'Green': '#059669'
-    };
-    return colorMap[color] || color.toLowerCase();
-  };
-
-  const getColorDescription = (color: string) => {
-    const descriptions: { [key: string]: string } = {
-      'Black': 'Classic black - versatile and timeless',
-      'White': 'Pure white - clean and fresh look',
-      'Gray': 'Heather gray - modern and neutral',
-      'Navy': 'Deep navy - sophisticated and bold',
-      'Red': 'Vibrant red - eye-catching and energetic',
-      'Blue': 'Royal blue - confident and stylish',
-      'Green': 'Forest green - natural and calming'
-    };
-    return descriptions[color] || `Beautiful ${color.toLowerCase()} shade`;
   };
 
   return (
@@ -95,9 +67,9 @@ const ProductDetail = () => {
           <div className="space-y-4">
             <div className="aspect-square bg-gray-100 rounded-2xl overflow-hidden relative group">
               <img
-                src={product.images[currentImageIndex] || product.image}
+                src={product.image}
                 alt={product.name}
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                className="w-full h-full object-cover"
               />
               
               {/* Like Button */}
@@ -124,29 +96,6 @@ const ProductDetail = () => {
                 CXN
               </div>
             </div>
-
-            {/* Image Thumbnails */}
-            {product.images.length > 1 && (
-              <div className="flex space-x-4">
-                {product.images.map((image, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
-                      currentImageIndex === index
-                        ? 'border-gray-900 scale-105'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <img
-                      src={image}
-                      alt={`${product.name} ${index + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
-            )}
           </div>
 
           {/* Product Info */}
@@ -175,37 +124,6 @@ const ProductDetail = () => {
               <p className="text-lg text-gray-700 leading-relaxed">{product.description}</p>
             </div>
 
-            {/* Color Selection with Preview */}
-            <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                Choose Color: {selectedColor && <span className="font-normal text-gray-600">{selectedColor}</span>}
-              </h3>
-              {selectedColor && (
-                <p className="text-sm text-gray-600 mb-4 italic">
-                  {getColorDescription(selectedColor)}
-                </p>
-              )}
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {product.colors.map(color => (
-                  <button
-                    key={color}
-                    onClick={() => setSelectedColor(color)}
-                    className={`flex items-center space-x-3 p-3 border-2 rounded-lg transition-all hover:scale-105 ${
-                      selectedColor === color
-                        ? 'border-gray-900 bg-gray-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                  >
-                    <div
-                      className="w-8 h-8 rounded-full border-2 border-white shadow-md"
-                      style={{ backgroundColor: getColorValue(color) }}
-                    />
-                    <span className="font-medium text-gray-900">{color}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-
             {/* Size Selection */}
             <div>
               <h3 className="text-lg font-semibold text-gray-900 mb-3">
@@ -231,9 +149,9 @@ const ProductDetail = () => {
             {/* Add to Cart Button */}
             <button
               onClick={handleAddToCart}
-              disabled={!selectedSize || !selectedColor}
+              disabled={!selectedSize}
               className={`w-full py-4 px-6 rounded-full font-medium text-lg transition-all duration-300 flex items-center justify-center space-x-3 ${
-                !selectedSize || !selectedColor
+                !selectedSize
                   ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
                   : isAdded
                   ? 'bg-green-600 text-white'

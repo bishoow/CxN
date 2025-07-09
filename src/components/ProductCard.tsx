@@ -24,7 +24,6 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
   const [isLiked, setIsLiked] = useState(false);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const { addToCart } = useCart();
 
   const handleQuickAdd = (e: React.MouseEvent) => {
@@ -65,23 +64,8 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
               </h3>
               <p className="text-gray-600 mb-4 line-clamp-2">{product.description}</p>
               
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="flex space-x-1">
-                  {product.colors.slice(0, 4).map((color, index) => (
-                    <div
-                      key={index}
-                      className="w-6 h-6 rounded-full border-2 border-gray-200"
-                      style={{ backgroundColor: color.toLowerCase() }}
-                    />
-                  ))}
-                  {product.colors.length > 4 && (
-                    <span className="text-sm text-gray-500">+{product.colors.length - 4}</span>
-                  )}
-                </div>
-                
-                <div className="text-sm text-gray-500">
-                  Sizes: {product.sizes.join(', ')}
-                </div>
+              <div className="text-sm text-gray-500 mb-4">
+                Sizes: {product.sizes.join(', ')}
               </div>
             </div>
             
@@ -113,11 +97,9 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
         {/* Product Image */}
         <div className="relative aspect-square overflow-hidden">
           <img
-            src={product.images[currentImageIndex] || product.image}
+            src={product.image}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            onMouseEnter={() => setCurrentImageIndex(1)}
-            onMouseLeave={() => setCurrentImageIndex(0)}
           />
           
           {/* Sale Badge */}
@@ -157,20 +139,6 @@ const ProductCard = ({ product, viewMode = 'grid' }: ProductCardProps) => {
           <h3 className="text-lg font-semibold text-gray-900 mb-2 group-hover:text-gray-700 transition-colors">
             {product.name}
           </h3>
-          
-          {/* Colors */}
-          <div className="flex items-center space-x-2 mb-3">
-            {product.colors.slice(0, 4).map((color, index) => (
-              <div
-                key={index}
-                className="w-5 h-5 rounded-full border-2 border-gray-200"
-                style={{ backgroundColor: color.toLowerCase() }}
-              />
-            ))}
-            {product.colors.length > 4 && (
-              <span className="text-sm text-gray-500">+{product.colors.length - 4}</span>
-            )}
-          </div>
           
           {/* Price */}
           <div className="flex items-center space-x-2">
